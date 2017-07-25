@@ -31,10 +31,7 @@ class ViewController: UIViewController,PasswordAlertViewDelegate {
         pswAlertView.delegate = self
         self.view.addSubview(pswAlertView)
     }
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+   
 
     func passwordCompleteInAlertView(alertView: PasswordAlertView, password: NSString) {
         alertView.removeFromSuperview()
@@ -42,5 +39,9 @@ class ViewController: UIViewController,PasswordAlertViewDelegate {
         self.label.text = NSString.init(format: "密码:\(password)" as NSString) as String
     }
 
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
 }
 

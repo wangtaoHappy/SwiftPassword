@@ -16,7 +16,6 @@ protocol PasswordAlertViewDelegate:NSObjectProtocol{
 
 class PasswordAlertView: UIView,UITextFieldDelegate {
 
-    
     let ScreenH = UIScreen.main.bounds.size.height
     let ScreenW = UIScreen.main.bounds.size.width
     let buttonH = 49
@@ -27,8 +26,8 @@ class PasswordAlertView: UIView,UITextFieldDelegate {
     var BGView = UIView.init()
     var textFiled = UITextField()
     
-    
     weak var delegate:PasswordAlertViewDelegate?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -76,11 +75,14 @@ class PasswordAlertView: UIView,UITextFieldDelegate {
         
         let textFiled = UITextField.init(frame: CGRect.init(x: 0, y: Int(line.frame.origin.y) + 30, width: Int(bgViewW), height: borderH))
         textFiled.backgroundColor = UIColor.clear
+        //设置代理
         textFiled.delegate = self
+        //监听编辑状态的变化
         textFiled.addTarget(self, action: #selector(textFiledValueChanged(textFiled:)), for: .editingChanged)
         textFiled.tintColor = UIColor.clear
         textFiled.textColor = UIColor.clear
         textFiled.becomeFirstResponder()
+        //设置键盘类型为数字键盘
         textFiled.keyboardType = .numberPad
         self.textFiled = textFiled;
         bgView.addSubview(self.textFiled)
@@ -114,15 +116,18 @@ class PasswordAlertView: UIView,UITextFieldDelegate {
     }
     
     func cancel(sender:UIButton) {
+        
         self.removeFromSuperview()
     }
     
     func sure(sender:UIButton) {
+        
         print("确定")
         delegate?.passwordCompleteInAlertView(alertView:self, password: self.textFiled.text! as NSString)
     }
     
     func textFiledValueChanged(textFiled:UITextField) {
+        
         for pointView  in self.pointViewArray {
             (pointView as! UIView).isHidden = true
         }
@@ -138,10 +143,9 @@ class PasswordAlertView: UIView,UITextFieldDelegate {
     }
     
     func keyBoardWillShow(Info:NSNotification) {
+        
         let userInfos = Info.userInfo![UIKeyboardFrameEndUserInfoKey]
-        
         let heigh = ((userInfos as AnyObject).cgRectValue.size.height)
-        
         self.BGView.center = CGPoint.init(x: self.BGView.center.x , y:ScreenH - heigh - self.BGView.frame.size.height/2 - 10)
     }
     
@@ -149,24 +153,27 @@ class PasswordAlertView: UIView,UITextFieldDelegate {
         self.BGView.center = self.center
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+    
         super.touchesBegan(touches, with: event)
         self.endEditing(true)
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
-        if string.characters.count == 0 {
+        if string.characters.count == 0 {//判断是是否为删除键
             return true
         }else if (textField.text?.characters.count)! >= pointCount {
+            //当输入的密码大于等于6位后就忽略
             return false
         } else {
             return true
         }
+    }
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }
